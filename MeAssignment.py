@@ -1,8 +1,10 @@
+import numpy as np
+
 class Metropolis:
-    def __init__(self, logTarget, initialState, stepSize):
+    def __init__(self, logTarget, initialState, stepSize=0.1):
         self.logTarget = logTarget
         self.state = initialState
-        self.step_size = step_size=0.1
+        self.stepSize = stepSize
         self.accept_count = 0
         self.total_count = 0
         self.samples = []
