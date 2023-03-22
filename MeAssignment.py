@@ -21,8 +21,8 @@ class Metropolis:
         self.total_count += 1
         return accept
     
-    def sample(self, n):
-        for _ in range(n):
+    def sample(self, nSamples):
+        for _ in range(nSamples):
             proposal = np.random.normal(self.state, self.stepSize)
             self._accept(proposal)
             self.samples.append(self.state)
