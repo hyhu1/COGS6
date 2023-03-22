@@ -1,10 +1,8 @@
-import numpy as np
-
 class Metropolis:
-    def __init__(self, logTarget, initialState):
+    def __init__(self, logTarget, initialState, stepSize):
         self.logTarget = logTarget
         self.state = initialState
-        self.step_size = 1.0
+        self.step_size = step_size=0.1
         self.accept_count = 0
         self.total_count = 0
         self.samples = []
@@ -19,23 +17,6 @@ class Metropolis:
         self.total_count += 1
         return accept
     
-    def adapt(self, blockLengths):
-        acceptance_rate = 0
-        for _ in range(n_blocks):
-            for _ in range(100):
-                proposal = np.random.normal(self.state, self.step_size)
-                self._accept(proposal)
-            acceptance_rate += self.accept_count / self.total_count
-            self.accept_count = 0
-            self.total_count = 0
-        acceptance_rate /= n_blocks
-        target_rate = 0.4
-        if acceptance_rate < target_rate / 2:
-            self.step_size /= 2
-        elif acceptance_rate > target_rate * 2:
-            self.step_size *= 2
-        return self
-    
     def sample(self, n):
         for _ in range(n):
             proposal = np.random.normal(self.state, self.step_size)
@@ -43,6 +24,20 @@ class Metropolis:
             self.samples.append(self.state)
         return self
     
+    def adapt(self, blockLengths):
+        acceptance_rate = 0
+        for blockLength in blockLengths:
+            for i in range(blockLength):
+                proposal = np.random.normal(self.state, self.stepSize)
+                if self._accept(proposal):
+                    acceptance_rate += 1
+            acceptance_rate /= blockLength
+            if acceptance_rate > 0.4:
+                self.stepSize *= 1.1
+            else:
+                self.stepSize /= 1.1
+        return self
+
     def summary(self):
         mean = np.mean(self.samples)
         interval = np.percentile(self.samples, [2.5, 97.5])
