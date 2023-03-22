@@ -1,5 +1,3 @@
-import numpy as np
-
 class Metropolis:
     def __init__(self, logTarget, initialState, stepSize=0.1):
         self.logTarget = logTarget
@@ -8,6 +6,7 @@ class Metropolis:
         self.accept_count = 0
         self.total_count = 0
         self.samples = []
+        self.acceptanceRate = 0.4
         
     def _accept(self, proposal):
         log_ratio = self.logTarget(proposal) - self.logTarget(self.state)
@@ -21,7 +20,7 @@ class Metropolis:
     
     def sample(self, n):
         for _ in range(n):
-            proposal = np.random.normal(self.state, self.step_size)
+            proposal = np.random.normal(self.state, self.stepSize)
             self._accept(proposal)
             self.samples.append(self.state)
         return self
