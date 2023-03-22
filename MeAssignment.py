@@ -1,3 +1,6 @@
+import numpy as np
+
+
 class Metropolis:
     def __init__(self, logTarget, initialState, stepSize=0.1):
         self.logTarget = logTarget
@@ -40,6 +43,11 @@ class Metropolis:
         return self
 
     def summary(self):
-        mean = np.mean(self.samples)
-        interval = np.percentile(self.samples, [2.5, 97.5])
-        return {'mean': mean, 'credible_interval': interval}
+        return {
+            'mean': np.mean(self.samples),
+            'sd': np.std(self.samples),
+            'se': np.std(self.samples) / np.sqrt(len(self.samples)),
+            'c025': np.percentile(self.samples, 2.5),
+            'c975': np.percentile(self.samples, 97.5),
+            'acceptanceRate': self.acceptanceRate
+        }
