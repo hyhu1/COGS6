@@ -19,7 +19,7 @@ class Metropolis:
         self.total_count += 1
         return accept
     
-    def adapt(self, n_blocks=10):
+    def adapt(self, blockLengths):
         acceptance_rate = 0
         for _ in range(n_blocks):
             for _ in range(100):
